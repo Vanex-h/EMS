@@ -1,3 +1,5 @@
-#root{
-    font-size: medium;
+.signup-right{
+    background-image: linear-gradient(#0469a3c2, rgba(4, 9, 30, 0)),url(../Login/Login_images/ogin.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
 }
