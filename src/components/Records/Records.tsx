@@ -1,8 +1,10 @@
-
+import Dashboard from "./Dashboard";
+// import Table from "./Table";
 const Records = () => {
     return (
-        <div>
-            {/* Your component content goes here */}
+        <div className="h-full w-full flex flex-row justify-between bg-[#D9D9D9] ">
+            <Dashboard />
+            {/* <Table /> */}
         </div>
     );
 };
