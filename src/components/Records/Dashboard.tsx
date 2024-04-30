@@ -1,5 +1,6 @@
 import { VscAccount } from "react-icons/vsc";
-
+import { FiLogOut } from "react-icons/fi";
+import Table from "./Table";
 const Dashboard = () => {
     return (
         <div className="flex flex-row w-full h-full ">
@@ -14,13 +15,15 @@ const Dashboard = () => {
                 <h1 className="cursor-pointer m-0 hover:text-[#0469a3c2]">Employees</h1>
             </div>
             <div>
-                <div>
-                    Logout
+                <div className="flex flex-row items-center">
+                   <FiLogOut /> Logout
                 </div>
             </div>
         </div>
-        <div className=" w-5/6 h-[10%] flex flex-row justify-between p-3 bg-white border-x-4 border-[#D1D1D1]">
-            <div className="flex flex-col justify-center w-2/3">Iyoooo</div>
+        <div className="flex flex-col w-5/6">
+
+        <div className="h-[10%] flex flex-row justify-between p-3 bg-white border-x-4 border-[#D1D1D1]">
+            <div className="flex flex-col justify-center w-2/3 text-stone-500 "><input type="text" placeholder="Search" className="border-2 border-[#D9D9D9] h-10 p-2 focus:outline-none text-sm rounded-md w-64" /></div>
             <div className="flex flex-col justify-center w-1/3 items-end">
                 <div className="flex flex-row  w-2/3 items-center">
 
@@ -28,6 +31,10 @@ const Dashboard = () => {
                 <div className="px-3">Vanessa</div>
                 </div>
             </div>
+        </div>
+        <div className="h-full w-6/6">
+            <Table />
+        </div>
         </div>
         </div>
     )
