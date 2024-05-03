@@ -68,10 +68,10 @@ function SimpleDialog(props: SimpleDialogProps) {
                 <div className="flex flex-row justify-between w-full">
                     <div className="flex flex-row items-center pr-4">Serial Number</div>
                     <input type="text" placeholder="Serial Number" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
-                </div>
+                </div>  
                 <div className="flex flex-row justify-between pt-2">
-                <Button className=" border p-2 text-sm rounded-md text-[#858D9D] hover:bg-[#858D9D] hover:text-white">Discard </Button>
-                <button className="border p-2 text-white bg-[#1366D9] text-sm h-11 rounded-md hover:bg-transparent hover:border-[#1366D9] hover:text-[#1366D9]">Add Employee</button>
+                <button className="border p-2 text-sm rounded-md text-[#858D9D] hover:text-md hover:text-gray-500" onClick={()=>setViewDialog(false)}>Discard </button>
+                <Button variant="outlined" className="border p-2 text-white bg-[#1366D9] text-sm h-11 rounded-md ">Add Employee</Button>
                 </div>
             </form>
             </div>      
