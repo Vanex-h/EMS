@@ -2,6 +2,7 @@ import { VscAccount } from "react-icons/vsc";
 import { FiLogOut } from "react-icons/fi";
 import Table from "./Table";
 const Dashboard = () => {
+    
     return (
         <div className="flex flex-row w-full h-full ">
 

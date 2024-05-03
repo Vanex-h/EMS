@@ -5,7 +5,7 @@ const Table = () => {
         <div className="h-full p-3 text-[#48505E]">
           <div className="bg-white h-16 flex flex-row justify-between p-3 items-center">
             <h2 className="text-xl font-medium text-[#444444]">Employee</h2>
-            <button className="border px-6 py-4 bg-[#1366D9] text-white text-sm rounded-md hover:bg-white hover:border-[#1366D9] hover:text-[#1366d9]">Add Employee +</button>
+            <button className="border px-6 py-4 bg-[#1366D9] text-white text-sm rounded-md hover:bg-white hover:border-[#1366D9] hover:text-[#1366d9]" >Add Employee +</button>
           </div>
        <table className="table-fixed w-full h-auto bg-white border-collapse border border-transparent">
         
