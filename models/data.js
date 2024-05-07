@@ -1,50 +1,123 @@
-const Sequeslize = require('sequelize');
-const sequelize = new Sequeslize('first', 'Vanessa', 'myroxane5');
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize({
+    dialect: 'mysql',
+    username: 'Vanessa',
+    password: 'myroxane5',
+    database: 'first',
+    host: 'localhost',
+    port: 3306, // default MySQL port
+});
 
-const Data= sequelize.define('data', {
-    firstName: {
-        type: Sequeslize.STRING,
+const Employees= sequelize.define('employees', {
+    ID: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false,
+      },
+
+    FirstName: {
+        type: Sequelize.STRING,
         allowNull: false
     },
-    lastName: {
-        type: Sequeslize.STRING,
+    LastName: {
+        type: Sequelize.STRING,
         allowNull: false
     },
-    national_id: {
-        type: Sequeslize.INTEGER,
+    National_id: {
+        type: Sequelize.INTEGER,
         allowNull: false
     },
-    telephone: {
-        type: Sequeslize.INTEGER,
+    Telephone: {
+        type: Sequelize.INTEGER,
         allowNull: false
     },
-    email: {
-        type: Sequeslize.STRING,
+    Email: {
+        type: Sequelize.STRING,
         allowNull: false
     },
-    department: {
-        type: Sequeslize.STRING,
+    Department: {
+        type: Sequelize.STRING,
         allowNull: false
     },
-    position: {
-        type: Sequeslize.STRING,
+    Position: {
+        type: Sequelize.STRING,
         allowNull: false
     },
-    laptop_manufacturer: {
-        type: Sequeslize.STRING,
+    Laptop_manufacturer: {
+        type: Sequelize.STRING,
         allowNull: false
     },
-    model: {
-        type: Sequeslize.STRING,
+    Model: {
+        type: Sequelize.STRING,
         allowNull: false
     },
-    serial_number: {
-        type: Sequeslize.INTEGER,
+    Serial_number: {
+        type: Sequelize.INTEGER,
         allowNull: false
     },
-    password: {
-        type: Sequeslize.STRING,
+    Password: {
+        type: Sequelize.STRING,
         allowNull: false
     }
     
-});
+},
+{   
+    timestamps: false,
+    indexes:[
+    {
+        name:"tb_firstName",
+        fields: ["FirstName"],
+    },
+    {
+        name :"tb_lastName",
+        fields: ["LastName"],
+    },
+    {
+        name :"tb_national_id",
+        fields: ["National_id"],
+    },
+    {
+        name :"tb_telephone",
+        fields: ["Telephone"],
+    },
+    {
+        name :"tb_email",
+        fields: ["Email"],
+    },
+    {
+        name :"tb_department",
+        fields: ["Department"],
+    },
+    {
+        name :"tb_position",
+        fields: ["Position"],
+    },
+    {
+        name :"tb_laptop_manufacturer",
+        fields: ["Laptop_manufacturer"],
+    },
+    {
+        name :"tb_model",
+        fields: ["Model"],
+    },
+    {
+        name :"tb_serial_number",
+        fields: ["Serial_number"],
+    },
+    {
+        name :"tb_password",
+        fields: ["Password"],
+    },
+]
+}
+);
+Employees.sync({ alter: true })
+  .then(() => {
+    console.log("Data table created successfully");
+  })
+  .catch((error) => {
+    console.error("Error creating Data table:", error);
+  });
+
+module.exports = Employees
