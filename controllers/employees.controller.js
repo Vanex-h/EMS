@@ -1,26 +1,22 @@
 const express = require("express");
-const { Employee, employeeValidator } = require("../models/employee.model");
+const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const createEmployee = async (req, res) => {
+const createUser = async (req, res) => {
   try {
-    const { value, error } = employeeValidator.validate(req.body);
-    if (error) return res.status(406).json({ message: error.message });
 
-    const  { firstName , lastName , username , email , password } = value
+    const  { FirstName, LastName, Email, Password } = req.body;
 
     const passHashed = await bcrypt.hash(password, 10);
     console.log(passHashed);
 
-    const employee = new Employee({
-      firstName: firstName,
-      lastName: lastName,
-      username: username,
-      email: email,
-      password: passHashed,
+    await User.create({
+      FirstName,
+      LastName,
+      Email,
+      Password: passHashed,      
     });
-    await employee.save();
-    return res.status(200).json({ message: "Employee added successfully" });
+    return res.status(200).json({ message: "User added successfully" });
   } catch (error) {
     console.log(error);
     return res.status(500).json({ message: "Internal Server error" });
@@ -29,102 +25,103 @@ const createEmployee = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    const data = await Employee.find({});
+    const data = await User.findAll({});
     return res.json(data);
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
 };
-const getEmployeeById = async (req, res) => {
+const getUserById = async (req, res) => {
   try {
-    const id = req.body.id;
-    const employee = await Employee.findOne(id);
-    if (employee) {
-      console.log(employee);
-      return res.json(employee);
+    const {id} = req.params;
+    const User = await User.findByPk(id);
+    if (User) {
+      console.log(User);
+      return res.json(User);
     } else {
-      return res.status(404).json({ message: "That employee doesn't exist" });
+      return res.status(404).json({ message: "That User doesn't exist" });
     }
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
 };
 
-const updateEmployee = async (req, res) => {
+const updateUser = async (req, res) => {
   try {
-    const id = req.body.id;
-    const emp = await Employee.findOne(id);
-    if (emp) {
-      emp.firstName = req.body.firstName;
-      emp.lastName = req.body.lastName;
-      emp.username = req.body.username;
-      emp.email = req.body.email;
-
-      await emp.save();
-      return res.json({ message: "Employee updated successfully", user });
+    const {id} = req.params;
+    const { FirstName, LastName, Email } = req.body;
+   const user= await User.findByPk(id);
+    if (user) {
+      await user.update({
+        FirstName,
+        LastName,
+        Email,
+      })
+      return res.json({ message: "User updated successfully", user });
     } else {
-      return res.status(404).json({ message: "That employee doesn't exist" });
+      return res.status(404).json({ message: "User not found" });
     }
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
 };
 
-const deleteEmployeeById = async (req, res) => {
+const deleteUserById = async (req, res) => {
   try {
-    const id = req.body.id;
-    const employee = await Employee.findOne(id);
-    if (employee) {
-      await employee.delete();
-      res.status(200).json({ message: "Successfully deleted the employee" });
+    const { id } = req.params;
+    const user = await User.findByPk(id);
+    if (user) {
+      await user.destroy();
+      res.status(200).json({ message: "Successfully deleted the User" });
     } else {
-      return res.status(404).json({ message: "That employee doesn't exist" });
+      return res.status(404).json({ message: "That User doesn't exist" });
     }
   } catch (error) {
     return res.status(500).json({ message: "Server error" });
   }
 };
 
-const empLogin=async(req,res)=>{
-    try {
-        
-        const {username,password}=req.body
-        const employee= await Employee.findOne({username:username})
-        if(!employee){
-            return res.status(404).json({message: "Invalid credentials"})
-        }
-        const passwordMatch= await bcrypt.compare(password, employee.password)
-    if(!passwordMatch){
-        return res.status(404).json("Invalid credentials")
+const userLogin = async (req, res) => {
+  try {
+    const { Email, Password } = req.body;
+    const user = await User.findOne({ where: { Email } });
+    if (!user) {
+      return res.status(404).json({ message: "Invalid credentials" });
     }
-    const token= jwt.sign({
-        firstName:employee.firstName,
-        lastName: employee.lastName,
-        username: employee.username,
-        email: employee.email,
-        id:employee._id
-    }, process.env.JWT_SECRET)
-    console.log(token);
-    return res.status(200).json({message: "Login successfully", token})
-} catch (error) {
-  console.log(error)
+    const passwordMatch = await bcrypt.compare(Password, user.Password);
+    if (!passwordMatch) {
+      return res.status(404).json({ message: "Invalid credentials" });
+    }
+    const token = jwt.sign(
+      {
+        id: user.ID,
+        FirstName: user.FirstName,
+        LastName: user.LastName,
+        Email: user.Email,
+      },
+      process.env.JWT_SECRET
+    );
+    return res.status(200).json({ message: "Login successful", token });
+  } catch (error) {
+    console.log(error);
     return res.status(500).json({ message: "Server error" });
-}
+  }
 };
 
 
-const getEmployeeProfile=async(res,req)=>{
+
+const getUserProfile=async(res,req)=>{
     const id= req.body.id
-    const employee= await Employee.findById(id)
-    return res.status(200).json({message: "Employee profile found", employee})
+    const User= await User.findById(id)
+    return res.status(200).json({message: "User profile found", User})
 }
 
 module.exports = {
-  createEmployee,
+  createUser,
   getAll,
-  getEmployeeById,
-  deleteEmployeeById,
-  updateEmployee,
-  empLogin,
-  getEmployeeProfile
+  getUserById,
+  deleteUserById,
+  updateUser,
+  userLogin,
+  getUserProfile
 };
