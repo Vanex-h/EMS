@@ -21,6 +21,8 @@ const connectingToDb = () => {
         });
     })
 }
+
 module.exports = {
-    connectingToDb
+    connectingToDb,
+    connection
 };

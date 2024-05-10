@@ -1,21 +1,17 @@
 const express = require("express");
 const { User } = require("../models/user");
 const bcrypt = require("bcrypt");
+const mysqlConnection = require("../database");
 const jwt = require("jsonwebtoken");
 const createUser = async (req, res) => {
   try {
+    const { Names, Email, Telephone, Password } = req.body;
 
-    const  { FirstName, LastName, Email, Password } = req.body;
-
-    const passHashed = await bcrypt.hash(password, 10);
+    const passHashed = await bcrypt.hash(Password, 10);
     console.log(passHashed);
-
-    await User.create({
-      FirstName,
-      LastName,
-      Email,
-      Password: passHashed,      
-    });
+    const insertQuery = `INSERT INTO users (Names, Email, Telephone, Password) VALUES (?, ?, ?, ?)`;
+    const newUserValues = [Names, Email, Telephone, passHashed];
+    await mysqlConnection.connection.query(insertQuery, newUserValues);
     return res.status(200).json({ message: "User added successfully" });
   } catch (error) {
     console.log(error);
@@ -33,7 +29,7 @@ const getAll = async (req, res) => {
 };
 const getUserById = async (req, res) => {
   try {
-    const {id} = req.params;
+    const { id } = req.params;
     const User = await User.findByPk(id);
     if (User) {
       console.log(User);
@@ -48,15 +44,15 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const {id} = req.params;
-    const { FirstName, LastName, Email } = req.body;
-   const user= await User.findByPk(id);
+    const { id } = req.params;
+    const { Names, Email, Telephone } = req.body;
+    const user = await User.findByPk(id);
     if (user) {
       await user.update({
-        FirstName,
-        LastName,
+        Names,
         Email,
-      })
+        Telephone,
+      });
       return res.json({ message: "User updated successfully", user });
     } else {
       return res.status(404).json({ message: "User not found" });
@@ -95,9 +91,9 @@ const userLogin = async (req, res) => {
     const token = jwt.sign(
       {
         id: user.ID,
-        FirstName: user.FirstName,
-        LastName: user.LastName,
+        Names: user.Names,
         Email: user.Email,
+        Telephone: user.Telephone,
       },
       process.env.JWT_SECRET
     );
@@ -108,13 +104,11 @@ const userLogin = async (req, res) => {
   }
 };
 
-
-
-const getUserProfile=async(res,req)=>{
-    const id= req.body.id
-    const User= await User.findById(id)
-    return res.status(200).json({message: "User profile found", User})
-}
+const getUserProfile = async (res, req) => {
+  const id = req.body.id;
+  const User = await User.findById(id);
+  return res.status(200).json({ message: "User profile found", User });
+};
 
 module.exports = {
   createUser,
@@ -123,5 +117,5 @@ module.exports = {
   deleteUserById,
   updateUser,
   userLogin,
-  getUserProfile
+  getUserProfile,
 };

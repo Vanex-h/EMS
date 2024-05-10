@@ -1,7 +1,7 @@
 const express= require('express')
 const app = express();
 const {connectingToDb} = require('./database')  
-const userRoutes = require('./routes/userRoute')  
+const userRoutes = require('./routes/users.routes')  
 const PORT= 1500
 
 app.use(express.json())
