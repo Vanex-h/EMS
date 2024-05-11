@@ -1,116 +1,117 @@
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
 const sequelize = new Sequelize({
-    dialect: 'mysql',
-    username: 'Vanessa',
-    password: 'myroxane5',
-    database: 'first',
-    host: 'localhost',
-    port: 3306, // default MySQL port
+  dialect: "mysql",
+  username: "Vanessa",
+  password: "myroxane5",
+  database: "first",
+  host: "localhost",
+  port: 3306, // default MySQL port
 });
 
-const Employees= sequelize.define('employees', {
+const Employees = sequelize.define(
+  "employees",
+  {
     ID: {
-        type: Sequelize.INTEGER,
-        autoIncrement: true,
-        primaryKey: true,
-        allowNull: false,
-      },
+      type: Sequelize.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+      allowNull: false,
+    },
 
     FirstName: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     LastName: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     National_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+      type: Sequelize.INTEGER,
+      allowNull: false,
     },
     Telephone: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+      type: Sequelize.INTEGER,
+      allowNull: false,
     },
     Email: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     Department: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     Position: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     Laptop_manufacturer: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     Model: {
-        type: Sequelize.STRING,
-        allowNull: false
+      type: Sequelize.STRING,
+      allowNull: false,
     },
     Serial_number: {
-        type: Sequelize.INTEGER,
-        allowNull: false
+      type: Sequelize.INTEGER,
+      allowNull: false,
     },
     Password: {
-        type: Sequelize.STRING,
-        allowNull: false
-    }
-    
-},
-{   
+      type: Sequelize.STRING,
+      allowNull: false,
+    },
+  },
+  {
     timestamps: false,
-    indexes:[
-    {
-        name:"tb_firstName",
+    indexes: [
+      {
+        name: "tb_firstName",
         fields: ["FirstName"],
-    },
-    {
-        name :"tb_lastName",
+      },
+      {
+        name: "tb_lastName",
         fields: ["LastName"],
-    },
-    {
-        name :"tb_national_id",
+      },
+      {
+        name: "tb_national_id",
         fields: ["National_id"],
-    },
-    {
-        name :"tb_telephone",
+      },
+      {
+        name: "tb_telephone",
         fields: ["Telephone"],
-    },
-    {
-        name :"tb_email",
+      },
+      {
+        name: "tb_email",
         fields: ["Email"],
-    },
-    {
-        name :"tb_department",
+      },
+      {
+        name: "tb_department",
         fields: ["Department"],
-    },
-    {
-        name :"tb_position",
+      },
+      {
+        name: "tb_position",
         fields: ["Position"],
-    },
-    {
-        name :"tb_laptop_manufacturer",
+      },
+      {
+        name: "tb_laptop_manufacturer",
         fields: ["Laptop_manufacturer"],
-    },
-    {
-        name :"tb_model",
+      },
+      {
+        name: "tb_model",
         fields: ["Model"],
-    },
-    {
-        name :"tb_serial_number",
+      },
+      {
+        name: "tb_serial_number",
         fields: ["Serial_number"],
-    },
-    {
-        name :"tb_password",
+      },
+      {
+        name: "tb_password",
         fields: ["Password"],
-    },
-]
-}
+      },
+    ],
+  }
 );
 Employees.sync({ alter: true })
   .then(() => {
@@ -120,4 +121,4 @@ Employees.sync({ alter: true })
     console.error("Error creating Data table:", error);
   });
 
-module.exports = Employees
+module.exports = Employees;
