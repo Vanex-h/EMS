@@ -23,14 +23,14 @@ const getAll = async (req, res) => {
   try {
     // const selectQuery = `SELECT id FROM users`;
     const data = await User.findAll();
-    // const data = await mysqlConnection.connection.query(selectQuery); 
+    // const data = await mysqlConnection.connection.query(selectQuery);
     console.log(data);
     return res.json(data);
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({ message: "Server error" });
   }
-};  
+};
 const getUserById = async (req, res) => {
   try {
     const { id } = req.params;
