@@ -5,7 +5,7 @@ const sequelize = new Sequelize({
   password: "myroxane5",
   database: "first",
   host: "localhost",
-  port: 3306, // default MySQL port
+  port: 3306, 
 });
 
 const User = sequelize.define(
@@ -64,5 +64,5 @@ User.sync({ alter: true })
   .catch((error) => {
     console.error("Error creating Data table:", error);
   });
-  
+
 module.exports = User;
