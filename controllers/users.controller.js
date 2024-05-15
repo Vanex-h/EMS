@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 const createUser = async (req, res) => {
   try {
     const { Names, Email, Telephone, Password } = req.body;
-
     const passHashed = await bcrypt.hash(Password, 10);
     console.log(passHashed);
     const insertQuery = `INSERT INTO users (Names, Email, Telephone, Password) VALUES (?, ?, ?, ?)`;
@@ -21,9 +20,7 @@ const createUser = async (req, res) => {
 
 const getAll = async (req, res) => {
   try {
-    // const selectQuery = `SELECT id FROM users`;
     const data = await User.findAll();
-    // const data = await mysqlConnection.connection.query(selectQuery);
     console.log(data);
     return res.json(data);
   } catch (error) {
@@ -31,13 +28,14 @@ const getAll = async (req, res) => {
     return res.status(500).json({ message: "Server error" });
   }
 };
+
 const getUserById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const User = await User.findByPk(id);
-    if (User) {
-      console.log(User);
-      return res.json(User);
+    const id = req.params;
+    const user = await User.findOne(id);
+    console.log(user);
+    if (user) {
+      return res.json(user);
     } else {
       return res.status(404).json({ message: "That User doesn't exist" });
     }
@@ -48,9 +46,9 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const { id } = req.params;
+    const id  = req.params;
     const { Names, Email, Telephone } = req.body;
-    const user = await User.findByPk(id);
+    const user = await User.findOne(id);
     if (user) {
       await user.update({
         Names,
@@ -68,8 +66,8 @@ const updateUser = async (req, res) => {
 
 const deleteUserById = async (req, res) => {
   try {
-    const { id } = req.params;
-    const user = await User.findByPk(id);
+    const  id  = req.params;
+    const user = await User.findOne(id);
     if (user) {
       await user.destroy();
       res.status(200).json({ message: "Successfully deleted the User" });
@@ -110,7 +108,7 @@ const userLogin = async (req, res) => {
 
 const getUserProfile = async (res, req) => {
   const id = req.body.id;
-  const User = await User.findById(id);
+  const User = await User.findOne(id);
   return res.status(200).json({ message: "User profile found", User });
 };
 
