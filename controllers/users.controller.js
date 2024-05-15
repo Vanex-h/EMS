@@ -46,7 +46,7 @@ const getUserById = async (req, res) => {
 
 const updateUser = async (req, res) => {
   try {
-    const id  = req.params;
+    const id = req.params;
     const { Names, Email, Telephone } = req.body;
     const user = await User.findOne(id);
     if (user) {
@@ -66,7 +66,7 @@ const updateUser = async (req, res) => {
 
 const deleteUserById = async (req, res) => {
   try {
-    const  id  = req.params;
+    const id = req.params;
     const user = await User.findOne(id);
     if (user) {
       await user.destroy();
