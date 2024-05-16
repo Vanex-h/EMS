@@ -1,11 +1,11 @@
 const express = require("express");
 const app = express();
 const { connectingToDb } = require("./database");
-const userRoutes = require("./routes/users.routes");
+const Routes = require("./routes/routes");
 const PORT = 1500;
 
 app.use(express.json());
-app.use("/", userRoutes);
+app.use("/", Routes);
 const startServer = async () => {
   try {
     await connectingToDb();

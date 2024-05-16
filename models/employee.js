@@ -5,10 +5,10 @@ const sequelize = new Sequelize({
   password: "myroxane5",
   database: "first",
   host: "localhost",
-  port: 3306, // default MySQL port
+  port: 3306, 
 });
 
-const Employees = sequelize.define(
+const Employee = sequelize.define(
   "employees",
   {
     ID: {
@@ -27,7 +27,7 @@ const Employees = sequelize.define(
       allowNull: false,
     },
     National_id: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.STRING,
       allowNull: false,
     },
     Telephone: {
@@ -56,10 +56,6 @@ const Employees = sequelize.define(
     },
     Serial_number: {
       type: Sequelize.INTEGER,
-      allowNull: false,
-    },
-    Password: {
-      type: Sequelize.STRING,
       allowNull: false,
     },
   },
@@ -106,19 +102,16 @@ const Employees = sequelize.define(
         name: "tb_serial_number",
         fields: ["Serial_number"],
       },
-      {
-        name: "tb_password",
-        fields: ["Password"],
-      },
+  
     ],
   }
 );
-Employees.sync({ alter: true })
+Employee.sync({ alter: true })
   .then(() => {
-    console.log("Data table created successfully");
+    console.log("Employee table created successfully");
   })
   .catch((error) => {
     console.error("Error creating Data table:", error);
   });
 
-module.exports = Employees;
+module.exports = Employee;

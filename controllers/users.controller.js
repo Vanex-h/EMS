@@ -18,7 +18,7 @@ const createUser = async (req, res) => {
   }
 };
 
-const getAll = async (req, res) => {
+const getAllUsers = async (req, res) => {
   try {
     const data = await User.findAll();
     console.log(data);
@@ -114,7 +114,7 @@ const getUserProfile = async (res, req) => {
 
 module.exports = {
   createUser,
-  getAll,
+  getAllUsers,
   getUserById,
   deleteUserById,
   updateUser,
