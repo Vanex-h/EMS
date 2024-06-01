@@ -1,38 +1,47 @@
 import React, { FormEvent, useState } from "react";
 import { FiEyeOff, FiEye } from "react-icons/fi";
 import { Link, Navigate, useNavigate } from "react-router-dom";
-// import { toast } from 'react-toastify'
-// import { PUBLIC_URL } from "../../api/api.config";
+import { toast } from 'react-toastify'
+
 
 const LoginRight = () => {
   const [passwordVisible, setPasswordVisible] = useState(false);
-  // const [formData, setFormData] = useState({
-  //   email: '',
-  //   password: ''
-  // })
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
 
-  // const  handleChange = (e: FormEvent<HTMLInputElement>) => {
-  //   const data = e.target as HTMLInputElement
-  //   setFormData(prevData => {
-  //     return { ...prevData, [data.name]: data.value }
-  //   })
-  // }
+  const navigate=useNavigate();
+  const [isLoading,setisLoading]= useState(false);
+  const [username, setusername]= useState("");
+  const [password, setpassword]= useState("");
+  const [error, seterror]= useState("");
+  const empLogin=async ()=>{
+      setisLoading(true)
+      let response= await fetch("http://localhost:1500/auth/login",{
+          method:"POST",
+          body: JSON.stringify({
+              username,
+              password,
+          }),
+          headers:{
+              "Content-Type": "application/json"
+      },})
+      setisLoading(false)
+      if(response.status==200){
+          const data= await response.json();
+          localStorage.setItem('token', data.token)
+          navigate('/home')
+      }
+      else{
+          seterror("Something is wrong");
+          setTimeout(()=>{
+              seterror("");
+          },3000)
+      }
+  }
 
-  // const navigate = useNavigate()
 
-  // const loginUser = async(e: FormEvent<HTMLFormElement>) => {
-  //   e.preventDefault()
-  //   try {
-  //     const response = await PUBLIC_URL.post('/auth/login', {
-  //         email_or_username_or_phone_number: formData.email,
-  //         password: formData.password
-  //     })
-  //     localStorage.setItem('ff_access_token', response.data.data.access_token)
-  //     navigate('/dashboard')
-  //   } catch (error) {
-  //     toast.error('Invalid credentials. try again !!')
-  //   }
-  // }
 
   return (
     <div className="bg-white w-[60%] lg:h-full p-8">
@@ -50,7 +59,7 @@ const LoginRight = () => {
               placeholder="Email Address"
               required
               name="email"
-             
+              onChange={(e)=>setusername(e.target.value)}
             />
           </div>
           <div className="">
@@ -62,6 +71,7 @@ const LoginRight = () => {
               placeholder="Password"
               required
               name="password"
+              onChange={(e)=>setpassword(e.target.value)}
               />
             {passwordVisible ? (
               <FiEyeOff
@@ -77,8 +87,8 @@ const LoginRight = () => {
             </div>
           </div>
           <div className="w-[85%] pl-4 text-[#0469a3c2] m-3 cursor-pointer">Forgot password?</div>
-          <button className="h-[70px] outline-none p-3 bg-[#0469a3c2] text-[white] text-center border-0 rounded-none font-bold cursor-pointer">
-            Log in
+          <button className="h-[70px] outline-none p-3 bg-[#0469a3c2] text-[white] text-center border-0 rounded-none font-bold cursor-pointer" disabled={isLoading} onClick={empLogin}>
+          {isLoading?"Loading...":"Login"}
           </button>
         </form>
       </div>
