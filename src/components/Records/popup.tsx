@@ -14,49 +14,47 @@ function SimpleDialog(props: SimpleDialogProps) {
   const [Loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [FirstName, setFirstname] = useState("");
+  const [firstName, setFirstname] = useState("");
   const [lastName, setLastname] = useState("");
-  const [National_id, setNationalID] = useState("");
-  const [Telephone, setTelephone] = useState("");
-  const [Email, setEmail] = useState("");
-  const [Department, setDepartment] = useState("");
-  const [Position, setPosition] = useState("");
-  const [Laptop_manufacturer, setLaptopManufacturer] = useState("");
-  const [Model, setModel] = useState("");
-  const [Serial_Number, setSerialNumber] = useState("");
-  const createEmployee=async()=>{
-    setLoading(true)
-    let response= await fetch("http://localhost:1500/createEmployee",{
-        method:"POST",
-        body: JSON.stringify({
-            FirstName,
-            lastName,
-            National_id,
-            Telephone,
-            Email,
-            Department,
-            Position,
-            Laptop_manufacturer,
-            Model,
-            Serial_Number
-        }),
-        headers:{
-            "Content-Type": "application/json"
-    },})
-    setLoading(false)
-    if(response.status==200){
-        // const data= await response.json();
-        navigate('/records')
+  const [national_id, setNationalID] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("");
+  const [position, setPosition] = useState("");
+  const [laptop_manufacturer, setLaptopManufacturer] = useState("");
+  const [model, setModel] = useState("");
+  const [serial_number, setSerialNumber] = useState("");
+  const createEmployee = async () => {
+    console.log("Creating employee");
+    setLoading(true);
+    const response = await fetch("http://localhost:1500/createEmployee", {
+      method: "POST",
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        national_id,
+        telephone,
+        email,
+        department,
+        position,
+        laptop_manufacturer,
+        model,
+        serial_number,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    setLoading(false);
+    if (response.status == 200) {
+      navigate("/records");
+    } else {
+      setError("Something is wrong");
+      setTimeout(() => {
+        setError("");
+      }, 3000);
     }
-    else{
-        setError("Something is wrong");
-        setTimeout(()=>{
-            setError("");
-        },3000)
-    }
-  }
-  
-
+  };
 
   return (
     <div
@@ -107,7 +105,7 @@ function SimpleDialog(props: SimpleDialogProps) {
                 type="text"
                 placeholder="National ID"
                 className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
-                onChange={(e)=>setNationalID(e.target.value)}
+                onChange={(e) => setNationalID(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-between w-full">
@@ -118,7 +116,7 @@ function SimpleDialog(props: SimpleDialogProps) {
                 type="number"
                 placeholder="Phone number"
                 className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
-                onChange={(e)=>setTelephone(e.target.value)}
+                onChange={(e) => setTelephone(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-between w-full">
@@ -127,7 +125,7 @@ function SimpleDialog(props: SimpleDialogProps) {
                 type="email"
                 placeholder="Email"
                 className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-between w-full">
@@ -136,7 +134,7 @@ function SimpleDialog(props: SimpleDialogProps) {
                 type="text"
                 placeholder="Department"
                 className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
-                onChange={(e)=>setDepartment(e.target.value)}
+                onChange={(e) => setDepartment(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-between w-full">
@@ -145,7 +143,7 @@ function SimpleDialog(props: SimpleDialogProps) {
                 type="text"
                 placeholder="Position"
                 className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
-                onChange={(e)=>setPosition(e.target.value)}
+                onChange={(e) => setPosition(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-between w-full">
@@ -156,7 +154,7 @@ function SimpleDialog(props: SimpleDialogProps) {
                 type="text"
                 placeholder="Laptop Manufacturer"
                 className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
-                onChange={(e)=>setLaptopManufacturer(e.target.value)}
+                onChange={(e) => setLaptopManufacturer(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-between w-full">
@@ -165,7 +163,7 @@ function SimpleDialog(props: SimpleDialogProps) {
                 type="text"
                 placeholder="Model"
                 className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
-                onChange={(e)=>setModel(e.target.value)}
+                onChange={(e) => setModel(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-between w-full">
@@ -176,16 +174,27 @@ function SimpleDialog(props: SimpleDialogProps) {
                 type="text"
                 placeholder="Serial Number"
                 className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
-                onChange={(e)=>setSerialNumber(e.target.value)}
+                onChange={(e) => setSerialNumber(e.target.value)}
               />
             </div>
             <div className="flex flex-row justify-between pt-2">
-              <Button className=" border p-2 text-sm rounded-md text-[#858D9D] hover:bg-[#858D9D] hover:text-white" disabled={Loading} onClick={createEmployee}>
+              <Button
+                className="border p-2 text-sm rounded-md text-[#858D9D] hover:bg-[#858D9D] hover:text-white"
+                disabled={Loading}
+                onClick={createEmployee}
+              >
                 Discard{" "}
               </Button>
-              <button className="border p-2 text-white bg-[#1366D9] text-sm h-11 rounded-md hover:bg-transparent hover:border-[#1366D9] hover:text-[#1366D9]">
-              {Loading? "Loading...":"Add Employee"}
-              </button>
+              {/* <button
+                className="border p-2 text-white bg-[#1366D9] text-sm h-11 rounded-md hover:bg-transparent hover:border-[#1366D9] hover:text-[#1366D9]"
+                disabled={Loading}
+                onClick={async() => {
+                  console.log("working on it...")
+                  await createEmployee()
+                }}
+              >
+                {Loading ? "Loading..." : "Add Employee"}
+              </button> */}
             </div>
           </form>
         </div>

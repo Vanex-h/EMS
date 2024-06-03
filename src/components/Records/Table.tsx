@@ -1,19 +1,66 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import DialogTitle from "@mui/material/DialogTitle";
 import "./../../App.css";
-
+import { useNavigate } from "react-router-dom";
 export interface SimpleDialogProps {
   setViewDialog: Function;
 }
 
 function SimpleDialog(props: SimpleDialogProps) {
   const { setViewDialog } = props;
+  const [Loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [error, setError] = useState("");
+  const [firstName, setFirstname] = useState("");
+  const [lastName, setLastname] = useState("");
+  const [national_id, setNationalID] = useState("");
+  const [telephone, setTelephone] = useState("");
+  const [email, setEmail] = useState("");
+  const [department, setDepartment] = useState("");
+  const [position, setPosition] = useState("");
+  const [laptop_manufacturer, setLaptopManufacturer] = useState("");
+  const [model, setModel] = useState("");
+  const [serial_number, setSerialNumber] = useState("");
+  const createEmployee = async () => {
+    console.log("Creating employee");
+    setLoading(true);
+    const response = await fetch("http://localhost:1500/createEmployee", {
+      method: "POST",
+      body: JSON.stringify({
+        firstName,
+        lastName,
+        national_id,
+        telephone,
+        email,
+        department,
+        position,
+        laptop_manufacturer,
+        model,
+        serial_number,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    setLoading(false);
+    if (response.status == 200) {
+      navigate("/records");
+    } else {
+      setError("Something is wrong");
+      setTimeout(() => {
+        setError("");
+      }, 3000);
+    }
+  };
 
   return (
     <div className="w-screen h-screen max-h-fit py-5  bg-black/10 absolute top-0 left-0 flex items-center justify-center">
-      <div className="absolute w-full  z-[3]" onClick={() => setViewDialog(false)}></div>
+      <div
+        className="absolute w-full  z-[3]"
+        onClick={() => setViewDialog(false)}
+      ></div>
       <div className="z-[4] px-6 py-3 bg-white rounded-2xl h-[95%] flex lg:flex-row md:flex-row flex-col justify-between">
         <CloseIcon
           className="lg:text-stone-400 md:text-stone-400 text-transparent cursor-pointer ml-auto"
@@ -26,47 +73,114 @@ function SimpleDialog(props: SimpleDialogProps) {
           <form className="text-[15px] text-[#48505E] p-3 w-full h-full flex flex-col justify-evenly">
             <div className="flex flex-row justify-between w-full">
               <div className="flex flex-row items-center pr-4">FirstName</div>
-              <input type="text" placeholder="First Name" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <input
+                type="text"
+                placeholder="First Name"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setFirstname(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between w-full">
               <div className="flex flex-row items-center pr-4">Last Name</div>
-              <input type="text" placeholder="Last Name" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <input
+                type="text"
+                placeholder="Last Name"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setLastname(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between w-full">
               <div className="flex flex-row items-center pr-4">National ID</div>
-              <input type="text" placeholder="National ID" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <input
+                type="text"
+                placeholder="National ID"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setNationalID(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between w-full">
-              <div className="flex flex-row items-center pr-4">Phone number</div>
-              <input type="number" placeholder="Phone number" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <div className="flex flex-row items-center pr-4">
+                Phone number
+              </div>
+              <input
+                type="number"
+                placeholder="Phone number"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setTelephone(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between w-full">
               <div className="flex flex-row items-center pr-4">Email</div>
-              <input type="email" placeholder="Email" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <input
+                type="email"
+                placeholder="Email"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between w-full">
               <div className="flex flex-row items-center pr-4">Department</div>
-              <input type="text" placeholder="Department" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <input
+                type="text"
+                placeholder="Department"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setDepartment(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between w-full">
               <div className="flex flex-row items-center pr-4">Position</div>
-              <input type="text" placeholder="Position" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <input
+                type="text"
+                placeholder="Position"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setPosition(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between w-full">
-              <div className="flex flex-row items-center pr-4">Laptop Manufacturer</div>
-              <input type="text" placeholder="Laptop Manufacturer" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <div className="flex flex-row items-center pr-4">
+                Laptop Manufacturer
+              </div>
+              <input
+                type="text"
+                placeholder="Laptop Manufacturer"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setLaptopManufacturer(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between w-full">
               <div className="flex flex-row items-center pr-4">Model</div>
-              <input type="text" placeholder="Model" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <input
+                type="text"
+                placeholder="Model"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setModel(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between w-full">
-              <div className="flex flex-row items-center pr-4">Serial Number</div>
-              <input type="text" placeholder="Serial Number" className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60" />
+              <div className="flex flex-row items-center pr-4">
+                Serial Number
+              </div>
+              <input
+                type="text"
+                placeholder="Serial Number"
+                className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+                onChange={(e) => setSerialNumber(e.target.value)}
+              />
             </div>
             <div className="flex flex-row justify-between pt-2">
-              <button className="border p-2 text-sm rounded-md text-[#858D9D] hover:text-md hover:text-gray-500" onClick={() => setViewDialog(false)}>Discard</button>
-              <Button variant="outlined" className="border p-2 text-white bg-[#1366D9] text-sm h-11 rounded-md">Add Employee</Button>
+              <button
+                className="border p-2 text-sm rounded-md text-[#858D9D] hover:text-md hover:text-gray-500"
+                onClick={() => setViewDialog(false)}
+              >
+                Discard
+              </button>
+              <Button
+                variant="outlined"
+                className="border p-2 text-white bg-[#1366D9] text-sm h-11 rounded-md"
+                onClick={createEmployee}
+              >
+                Add Employee
+              </Button>
             </div>
           </form>
         </div>
@@ -79,14 +193,14 @@ interface Employee {
   id: number;
   firstName: string;
   lastName: string;
-  nationalIdentity: string;
+  national_id: string;
   telephone: string;
   email: string;
   department: string;
   position: string;
-  laptopManufacturer: string;
+  laptop_manufacturer: string;
   model: string;
-  serialNumber: string;
+  serial_number: string;
 }
 
 const Table: React.FC = () => {
@@ -96,12 +210,12 @@ const Table: React.FC = () => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch('http://localhost:1500/Employees');
+        const response = await fetch("http://localhost:1500/Employees");
         const data = await response.json();
         setEmployees(data);
         console.log(data);
       } catch (error) {
-        console.error('Error fetching employee data:', error);
+        console.error("Error fetching employee data:", error);
       }
     };
 
@@ -112,14 +226,19 @@ const Table: React.FC = () => {
     <div className="h-full p-3 text-[#48505E] flex flex-col">
       <div className="bg-white h-16 flex flex-row justify-between p-3 items-center">
         <h2 className="text-xl font-medium text-[#444444]">Employee</h2>
-        <button className="border px-6 py-4 bg-[#1366D9] text-white text-sm rounded-md hover:bg-white hover:border-[#1366D9] hover:text-[#1366d9]" onClick={() => setViewDialog(true)}>Add Employee +</button>
+        <button
+          className="border px-6 py-4 bg-[#1366D9] text-white text-sm rounded-md hover:bg-white hover:border-[#1366D9] hover:text-[#1366d9]"
+          onClick={() => setViewDialog(true)}
+        >
+          Add Employee +
+        </button>
         {viewDialog ? <SimpleDialog setViewDialog={setViewDialog} /> : null}
       </div>
       <div className="flex-1 overflow-auto">
         <table className="table-fixed w-full bg-white border-collapse border border-transparent">
           <thead className="sticky top-0 bg-white">
             <tr className="text-[#667085] border-b border-transparent">
-              <th className="py-2">ID</th>
+              <th className="py-2 w-20">ID</th>
               <th className="py-2">FirstName</th>
               <th className="py-2">LastName</th>
               <th className="py-2">National Identity</th>
@@ -138,28 +257,34 @@ const Table: React.FC = () => {
                 <td className="py-2">{employee.id}</td>
                 <td className="py-2">{employee.firstName}</td>
                 <td className="py-2">{employee.lastName}</td>
-                <td className="py-2 text-sm">{employee.nationalIdentity}</td>
+                <td className="py-2 text-sm">{employee.national_id}</td>
                 <td className="py-2">{employee.telephone}</td>
                 <td className="py-2 text-[13px]">{employee.email}</td>
                 <td className="py-2">{employee.department}</td>
                 <td className="py-2">{employee.position}</td>
-                <td className="py-2">{employee.laptopManufacturer}</td>
+                <td className="py-2">{employee.laptop_manufacturer}</td>
                 <td className="py-2">{employee.model}</td>
-                <td className="px-4 py-2">{employee.serialNumber}</td>
+                <td className="px-4 py-2">{employee.serial_number}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
       <div className="h-16 flex flex-row p-3 bg-white justify-between w-[100%]">
-        <button className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md">Previous</button>
+        <button className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md">
+          Previous
+        </button>
         <div className="text-[15px] flex flex-row items-center justify-evenly w-24">
-          Page <br /><div className="font-medium">1</div> of <div className="font-medium">10</div>
+          Page <br />
+          <div className="font-medium">1</div> of{" "}
+          <div className="font-medium">10</div>
         </div>
-        <button className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md">Next</button>
+        <button className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md">
+          Next
+        </button>
       </div>
     </div>
   );
-}
+};
 
 export default Table;
