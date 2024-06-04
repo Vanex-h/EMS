@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import DialogTitle from "@mui/material/DialogTitle";
 import "./../../App.css";
 import { useNavigate } from "react-router-dom";
+
 export interface SimpleDialogProps {
   setViewDialog: Function;
 }
@@ -56,9 +57,9 @@ function SimpleDialog(props: SimpleDialogProps) {
   };
 
   return (
-    <div className="w-screen h-screen max-h-fit py-5  bg-black/10 absolute top-0 left-0 flex items-center justify-center">
+    <div className="w-screen h-screen max-h-fit py-5 bg-black/10 absolute top-0 left-0 flex items-center justify-center">
       <div
-        className="absolute w-full  z-[3]"
+        className="absolute w-full z-[3]"
         onClick={() => setViewDialog(false)}
       ></div>
       <div className="z-[4] px-6 py-3 bg-white rounded-2xl h-[95%] flex lg:flex-row md:flex-row flex-col justify-between">
@@ -203,9 +204,15 @@ interface Employee {
   serial_number: string;
 }
 
-const Table: React.FC = () => {
+interface TableProps {
+  searchQuery: string;
+}
+
+const Table: React.FC<TableProps> = ({ searchQuery }) => {
   const [viewDialog, setViewDialog] = useState(false);
   const [employees, setEmployees] = useState<Employee[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const employeesPerPage = 10;
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -221,6 +228,29 @@ const Table: React.FC = () => {
 
     fetchEmployees();
   }, []);
+
+  const handleNextPage = () => {
+    setCurrentPage((prevPage) => prevPage + 1);
+  };
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
+  };
+
+  const indexOfLastEmployee = currentPage * employeesPerPage;
+  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
+
+  // Filter employees based on the search query
+  const filteredEmployees = employees.filter((employee) =>
+    Object.values(employee).some((value) =>
+      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
+
+  const currentEmployees = filteredEmployees.slice(
+    indexOfFirstEmployee,
+    indexOfLastEmployee
+  );
 
   return (
     <div className="h-full p-3 text-[#48505E] flex flex-col">
@@ -252,7 +282,7 @@ const Table: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {employees.map((employee) => (
+            {currentEmployees.map((employee) => (
               <tr key={employee.id} className="border-b border-transparent">
                 <td className="py-2">{employee.id}</td>
                 <td className="py-2">{employee.firstName}</td>
@@ -271,15 +301,21 @@ const Table: React.FC = () => {
         </table>
       </div>
       <div className="h-16 flex flex-row p-3 bg-white justify-between w-[100%]">
-        <button className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md">
+        <button
+          className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md"
+          onClick={handlePreviousPage}
+          disabled={currentPage === 1}
+        >
           Previous
         </button>
         <div className="text-[15px] flex flex-row items-center justify-evenly w-24">
-          Page <br />
-          <div className="font-medium">1</div> of{" "}
-          <div className="font-medium">10</div>
+          Page {currentPage} of {Math.ceil(filteredEmployees.length / employeesPerPage)}
         </div>
-        <button className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md">
+        <button
+          className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md"
+          onClick={handleNextPage}
+          disabled={currentPage === Math.ceil(filteredEmployees.length / employeesPerPage)}
+        >
           Next
         </button>
       </div>
