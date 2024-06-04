@@ -27,7 +27,7 @@ function SimpleDialog(props: SimpleDialogProps) {
   const createEmployee = async () => {
     console.log("Creating employee");
     setLoading(true);
-    const response = await fetch("http://localhost:1500/createEmployee", {
+    const response = await fetch("http://localhost:1500/employees/new", {
       method: "POST",
       body: JSON.stringify({
         firstName,
@@ -43,6 +43,7 @@ function SimpleDialog(props: SimpleDialogProps) {
       }),
       headers: {
         "Content-Type": "application/json",
+        "Authorization": `Bearer ${localStorage.getItem("token")}`,
       },
     });
     setLoading(false);
@@ -217,7 +218,12 @@ const Table: React.FC<TableProps> = ({ searchQuery }) => {
   useEffect(() => {
     const fetchEmployees = async () => {
       try {
-        const response = await fetch("http://localhost:1500/Employees");
+        const response = await fetch("http://localhost:1500/employees", {
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
         const data = await response.json();
         setEmployees(data);
         console.log(data);

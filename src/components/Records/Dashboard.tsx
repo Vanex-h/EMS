@@ -1,10 +1,36 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { VscAccount } from "react-icons/vsc";
 import { FiLogOut } from "react-icons/fi";
 import Table from "./Table";
+import { parseJwt } from "../../utils";
+import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [username, setUsername] = useState("");
+  const navigate= useNavigate();
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+
+  //   setUsername(parseJwt(token!));
+  //   console.log(username);
+  // }, []);
+  const userProfile=async()=>{
+    const response= await fetch("http://localhost:1500/users/profile",
+      {
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("token")}`
+        }
+      }
+    );
+   const data = await response.json();
+    setUsername(data.user.email);
+    console.log("========>",username);
+  }
+  useEffect(() => {
+    userProfile();
+  }, []); 
 
   return (
     <div className="flex flex-row w-full h-full ">
@@ -20,9 +46,12 @@ const Dashboard = () => {
           </h1>
         </div>
         <div>
-          <div className="px-2 flex flex-row items-center">
+          <button className="px-2 flex flex-row items-center" onClick={() => {
+            localStorage.removeItem("token");
+            navigate('/login');
+          }}>
             <FiLogOut /> Logout
-          </div>
+          </button>
         </div>
       </div>
       <div className="">
@@ -39,7 +68,7 @@ const Dashboard = () => {
           <div className="flex flex-col justify-center w-1/3 items-end">
             <div className="flex flex-row w-2/3 items-center">
               <VscAccount />
-              <div className="px-3">Vanessa</div>
+              <div className="px-3">{username}</div>
             </div>
           </div>
         </div>
