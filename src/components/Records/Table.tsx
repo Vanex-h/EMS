@@ -47,7 +47,7 @@ function SimpleDialog(props: SimpleDialogProps) {
       },
     });
     setLoading(false);
-    if (response.status == 200) {
+    if (response.status == 201) {
       navigate("/records");
     } else {
       setError("Something is wrong");
@@ -60,7 +60,7 @@ function SimpleDialog(props: SimpleDialogProps) {
   return (
     <div className="w-screen h-screen max-h-fit py-5 bg-black/10 absolute top-0 left-0 flex items-center justify-center">
       <div
-        className="absolute w-full z-[3]"
+        className="absolute w-full h-full z-[3]"
         onClick={() => setViewDialog(false)}
       ></div>
       <div className="z-[4] px-6 py-3 bg-white rounded-2xl h-[95%] flex lg:flex-row md:flex-row flex-col justify-between">
@@ -213,7 +213,7 @@ const Table: React.FC<TableProps> = ({ searchQuery }) => {
   const [viewDialog, setViewDialog] = useState(false);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const employeesPerPage = 10;
+  const employeesPerPage = 7  ;
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -270,7 +270,7 @@ const Table: React.FC<TableProps> = ({ searchQuery }) => {
         </button>
         {viewDialog ? <SimpleDialog setViewDialog={setViewDialog} /> : null}
       </div>
-      <div className="flex-1 overflow-auto">
+      <div className="flex-1 overflow-hidden">
         <table className="table-fixed w-full bg-white border-collapse border border-transparent">
           <thead className="sticky top-0 bg-white">
             <tr className="text-[#667085] border-b border-transparent">
