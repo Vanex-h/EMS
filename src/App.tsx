@@ -4,6 +4,7 @@ import Login from "./components/Login/Login";
 import Signup from "./components/Signup/Signup";
 import Records from "./components/Records/Records";
 import SessionWrapper from "./components/SessionWrapper";
+// import ChatApp from "./components/Records/tab";
 function App() {
   return (
     <>
@@ -21,6 +22,7 @@ function App() {
           <Route path="login" element={<Login />}></Route>
           <Route path="" element={<Login />}></Route>
           <Route path="signup" element={<Signup />}></Route>
+          {/* <Route path="chat" element={<ChatApp />}></Route> */}
           <Route
             path="records"
             element={

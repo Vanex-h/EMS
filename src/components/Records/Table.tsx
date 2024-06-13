@@ -4,6 +4,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import DialogTitle from "@mui/material/DialogTitle";
 import "./../../App.css";
 import { useNavigate } from "react-router-dom";
+import EmployeeTable from "./tab";
 
 export interface SimpleDialogProps {
   setViewDialog: Function;
@@ -43,11 +44,11 @@ function SimpleDialog(props: SimpleDialogProps) {
       }),
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${localStorage.getItem("token")}`,
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
     });
     setLoading(false);
-    if (response.status == 201) {
+    if (response.status == 200) {
       navigate("/records");
     } else {
       setError("Something is wrong");
@@ -213,7 +214,7 @@ const Table: React.FC<TableProps> = ({ searchQuery }) => {
   const [viewDialog, setViewDialog] = useState(false);
   const [employees, setEmployees] = useState<Employee[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const employeesPerPage = 7  ;
+  const employeesPerPage = 7;
 
   useEffect(() => {
     const fetchEmployees = async () => {
@@ -221,7 +222,7 @@ const Table: React.FC<TableProps> = ({ searchQuery }) => {
         const response = await fetch("http://localhost:1500/employees", {
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         });
         const data = await response.json();
@@ -270,43 +271,55 @@ const Table: React.FC<TableProps> = ({ searchQuery }) => {
         </button>
         {viewDialog ? <SimpleDialog setViewDialog={setViewDialog} /> : null}
       </div>
-      <div className="flex-1 overflow-hidden">
-        <table className="table-fixed w-full bg-white border-collapse border border-transparent">
-          <thead className="sticky top-0 bg-white">
-            <tr className="text-[#667085] border-b border-transparent">
-              <th className="py-2 w-20">ID</th>
-              <th className="py-2">FirstName</th>
-              <th className="py-2">LastName</th>
-              <th className="py-2">National Identity</th>
-              <th className="py-2">Telephone</th>
-              <th className="py-2">Email</th>
-              <th className="py-2">Department</th>
-              <th className="py-2">Position</th>
-              <th className="py-2">Laptop Manufacturer</th>
-              <th className="py-2">Model</th>
-              <th className="px-4 py-2">Serial Number</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentEmployees.map((employee) => (
-              <tr key={employee.id} className="border-b border-transparent">
-                <td className="py-2">{employee.id}</td>
-                <td className="py-2">{employee.firstName}</td>
-                <td className="py-2">{employee.lastName}</td>
-                <td className="py-2 text-sm">{employee.national_id}</td>
-                <td className="py-2">{employee.telephone}</td>
-                <td className="py-2 text-[13px]">{employee.email}</td>
-                <td className="py-2">{employee.department}</td>
-                <td className="py-2">{employee.position}</td>
-                <td className="py-2">{employee.laptop_manufacturer}</td>
-                <td className="py-2">{employee.model}</td>
-                <td className="px-4 py-2">{employee.serial_number}</td>
+      <div className=" flex-1 w-full bg-white flex content-center justify-center">
+        <div className="w-[90%] overflow-x-auto">
+          <EmployeeTable data={employees} />
+          {/* <table className="w-full bg-white border-collapse border border-transparent">
+            <thead className="sticky top-0 bg-white">
+              <tr className="text-[#667085] border-transparent border-b-2 border-b-gray-200">
+                <th>ID</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>National Identity</th>
+                <th>Telephone</th>
+                <th>Email</th>
+                <th>Department</th>
+                <th>Position</th>
+                <th>Laptop Manufacturer</th>
+                <th>Model</th>
+                <th> Serial Number</th>
+                <th>Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {currentEmployees.map((employee) => (
+                <tr key={employee.id} className="border-b border-transparent">
+                  <td className="py-2">{employee.id}</td>
+                  <td className="py-2">{employee.firstName}</td>
+                  <td className="py-2">{employee.lastName}</td>
+                  <td className="py-2 text-sm">{employee.national_id}</td>
+                  <td className="py-2">{employee.telephone}</td>
+                  <td className="py-2 text-[13px]">{employee.email}</td>
+                  <td className="py-4 pl-10">{employee.department}</td>
+                  <td className="py-2">{employee.position}</td>
+                  <td className="py-2">{employee.laptop_manufacturer}</td>
+                  <td className="py-2">{employee.model}</td>
+                  <td className="px-4 py-2">{employee.serial_number}</td>
+                  <td className="py-2 flex justify-center items-center">
+                    <button className="bg-green-500 text-white px-4 py-1 rounded mr-2">
+                      Update
+                    </button>
+                    <button className="bg-red-500 text-white px-4 py-1 rounded">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table> */}
+        </div>
       </div>
-      <div className="h-16 flex flex-row p-3 bg-white justify-between w-[100%]">
+      {/* <div className="h-16 flex flex-row p-3 bg-white justify-between w-[100%]">
         <button
           className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md"
           onClick={handlePreviousPage}
@@ -315,16 +328,20 @@ const Table: React.FC<TableProps> = ({ searchQuery }) => {
           Previous
         </button>
         <div className="text-[15px] flex flex-row items-center justify-evenly w-24">
-          Page {currentPage} of {Math.ceil(filteredEmployees.length / employeesPerPage)}
+          Page {currentPage} of{" "}
+          {Math.ceil(filteredEmployees.length / employeesPerPage)}
         </div>
         <button
           className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md"
           onClick={handleNextPage}
-          disabled={currentPage === Math.ceil(filteredEmployees.length / employeesPerPage)}
+          disabled={
+            currentPage ===
+            Math.ceil(filteredEmployees.length / employeesPerPage)
+          }
         >
           Next
         </button>
-      </div>
+      </div> */}
     </div>
   );
 };
