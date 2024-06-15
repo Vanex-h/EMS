@@ -81,7 +81,7 @@ const LoginRight = () => {
               Forgot password?
             </div>
             <button
-              className=" cursor-pointer outline-none p-3 bg-[#0469a3c2] text-[white] text-center border-0 rounded-none font-bold"
+              className=" cursor-pointer focus:outline-none p-3 bg-[#0469a3c2] text-[white] text-center border-0 rounded-none font-bold"
               // disabled={isLoading}
               onClick={login}
             >

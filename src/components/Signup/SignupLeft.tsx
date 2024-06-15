@@ -98,7 +98,7 @@ const SignupLeft = () => {
           </div>
 
           <button
-            className="h-[70px] mt-3 outline-none p-3 bg-[#0469a3c2] text-[white] text-center border-0 rounded-none font-bold"
+            className="h-[70px] mt-3 focus:outline-none p-3 bg-[#0469a3c2] text-[white] text-center border-0 rounded-none font-bold"
             onClick={signUp}
           >
             Sign Up
@@ -121,30 +121,3 @@ const SignupLeft = () => {
 };
 export default SignupLeft;
 
-// const [formData, setFormData] = useState({
-//   email: '',
-//   password: ''
-// })
-
-// const  handleChange = (e: FormEvent<HTMLInputElement>) => {
-//   const data = e.target as HTMLInputElement
-//   setFormData(prevData => {
-//     return { ...prevData, [data.name]: data.value }
-//   })
-// }
-
-// const navigate = useNavigate()
-
-// const loginUser = async(e: FormEvent<HTMLFormElement>) => {
-//   e.preventDefault()
-//   try {
-//     const response = await PUBLIC_URL.post('/auth/login', {
-//         email_or_username_or_phone_number: formData.email,
-//         password: formData.password
-//     })
-//     localStorage.setItem('ff_access_token', response.data.data.access_token)
-//     navigate('/dashboard')
-//   } catch (error) {
-//     toast.error('Invalid credentials. try again !!')
-//   }
-// }

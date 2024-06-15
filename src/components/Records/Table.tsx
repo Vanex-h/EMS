@@ -25,7 +25,9 @@ function SimpleDialog(props: SimpleDialogProps) {
   const [laptop_manufacturer, setLaptopManufacturer] = useState("");
   const [model, setModel] = useState("");
   const [serial_number, setSerialNumber] = useState("");
-  const createEmployee = async () => {
+
+  const createEmployee = async (e: any) => {
+    e.preventDefault();
     console.log("Creating employee");
     setLoading(true);
     const response = await fetch("http://localhost:1500/employees/new", {
@@ -49,9 +51,9 @@ function SimpleDialog(props: SimpleDialogProps) {
     });
     setLoading(false);
     if (response.status == 200) {
-      navigate("/records");
+      window.location.reload();
     } else {
-      setError("Something is wrong");
+      setError("Fill all the fields accordingly");
       setTimeout(() => {
         setError("");
       }, 3000);
@@ -59,7 +61,7 @@ function SimpleDialog(props: SimpleDialogProps) {
   };
 
   return (
-    <div className="w-screen h-screen max-h-fit py-5 bg-black/10 absolute top-0 left-0 flex items-center justify-center">
+    <div className="w-screen h-screen max-h-fit py-5 bg-black/10 absolute top-0 left-0 flex items-center justify-center z-1">
       <div
         className="absolute w-full h-full z-[3]"
         onClick={() => setViewDialog(false)}
@@ -73,7 +75,8 @@ function SimpleDialog(props: SimpleDialogProps) {
           <DialogTitle className="text-[#383E49] flex flex-row justify-between">
             <strong className="text-[#383E49]">New Employee</strong>
           </DialogTitle>
-          <form className="text-[15px] text-[#48505E] p-3 w-full h-full flex flex-col justify-evenly">
+          <p className="text-red-400">{error}</p>
+          <form className="text-[15px] text-[#48505E] p-3 w-full h-full flex flex-col justify-evenly" onSubmit={createEmployee}>
             <div className="flex flex-row justify-between w-full">
               <div className="flex flex-row items-center pr-4">FirstName</div>
               <input
@@ -180,7 +183,7 @@ function SimpleDialog(props: SimpleDialogProps) {
               <Button
                 variant="outlined"
                 className="border p-2 text-white bg-[#1366D9] text-sm h-11 rounded-md"
-                onClick={createEmployee}
+                type='submit'
               >
                 Add Employee
               </Button>
@@ -192,158 +195,80 @@ function SimpleDialog(props: SimpleDialogProps) {
   );
 }
 
-interface Employee {
-  id: number;
-  firstName: string;
-  lastName: string;
-  national_id: string;
-  telephone: string;
-  email: string;
-  department: string;
-  position: string;
-  laptop_manufacturer: string;
-  model: string;
-  serial_number: string;
-}
+  interface Employee {
+    id: number;
+    firstName: string;
+    lastName: string;
+    national_id: string;
+    telephone: string;
+    email: string;
+    department: string;
+    position: string;
+    laptop_manufacturer: string;
+    model: string;
+    serial_number: string;
+  }
 
-interface TableProps {
-  searchQuery: string;
-}
+  interface TableProps {
+    searchQuery: string;
+  }
 
-const Table: React.FC<TableProps> = ({ searchQuery }) => {
-  const [viewDialog, setViewDialog] = useState(false);
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const employeesPerPage = 7;
+  const Table: React.FC<TableProps> = ({ searchQuery }) => {
+    const [viewDialog, setViewDialog] = useState(false);
+    const [employees, setEmployees] = useState<Employee[]>([]);
 
-  useEffect(() => {
-    const fetchEmployees = async () => {
-      try {
-        const response = await fetch("http://localhost:1500/employees", {
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        });
-        const data = await response.json();
-        setEmployees(data);
-        console.log(data);
-      } catch (error) {
-        console.error("Error fetching employee data:", error);
-      }
-    };
 
-    fetchEmployees();
-  }, []);
+    useEffect(() => {
+      const fetchEmployees = async () => {
+        try {
+          const response = await fetch("http://localhost:1500/employees", {
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          });
+          const data = await response.json();
+          setEmployees(data);
+          console.log(data);
+        } catch (error) {
+          console.error("Error fetching employee data:", error);
+        }
+      };
 
-  const handleNextPage = () => {
-    setCurrentPage((prevPage) => prevPage + 1);
+      fetchEmployees();
+    }, []);
+
+   const [inputValue, setInputValue] = useState("")
+
+    return (
+      <div className="p-3 text-[#48505E] flex flex-col">
+        <div className="bg-white h-16 flex flex-row justify-between p-3 items-center">
+          <h2 className="text-xl font-medium text-[#444444]">Employee</h2>
+          <input
+            type="text"
+            placeholder="Search employee"
+            className="border rounded-md p-3 focus:outline-none h-11 text-sm w-60"
+            onChange={(e) => setInputValue(e.target.value)}
+
+            />
+            
+          <button
+            className="border px-6 py-4 bg-[#1366D9] text-white text-sm rounded-md hover:bg-white hover:border-[#1366D9] hover:text-[#1366d9]"
+            onClick={() => setViewDialog(true)}
+          >
+            Add Employee +
+          </button>
+          {viewDialog ? <SimpleDialog setViewDialog={setViewDialog} /> : null}
+        </div>
+        <div className="w-full flex content-center justify-center">
+          <div className="w-full">
+            <EmployeeTable employeeData={employees} inputValue={inputValue}/>
+
+          </div>
+        </div>
+  
+      </div>
+    );
   };
 
-  const handlePreviousPage = () => {
-    setCurrentPage((prevPage) => Math.max(prevPage - 1, 1));
-  };
-
-  const indexOfLastEmployee = currentPage * employeesPerPage;
-  const indexOfFirstEmployee = indexOfLastEmployee - employeesPerPage;
-
-  // Filter employees based on the search query
-  const filteredEmployees = employees.filter((employee) =>
-    Object.values(employee).some((value) =>
-      value.toString().toLowerCase().includes(searchQuery.toLowerCase())
-    )
-  );
-
-  const currentEmployees = filteredEmployees.slice(
-    indexOfFirstEmployee,
-    indexOfLastEmployee
-  );
-
-  return (
-    <div className="h-full p-3 text-[#48505E] flex flex-col">
-      <div className="bg-white h-16 flex flex-row justify-between p-3 items-center">
-        <h2 className="text-xl font-medium text-[#444444]">Employee</h2>
-        <button
-          className="border px-6 py-4 bg-[#1366D9] text-white text-sm rounded-md hover:bg-white hover:border-[#1366D9] hover:text-[#1366d9]"
-          onClick={() => setViewDialog(true)}
-        >
-          Add Employee +
-        </button>
-        {viewDialog ? <SimpleDialog setViewDialog={setViewDialog} /> : null}
-      </div>
-      <div className=" flex-1 w-full bg-white flex content-center justify-center">
-        <div className="w-[90%] overflow-x-auto">
-          <EmployeeTable data={employees} />
-          {/* <table className="w-full bg-white border-collapse border border-transparent">
-            <thead className="sticky top-0 bg-white">
-              <tr className="text-[#667085] border-transparent border-b-2 border-b-gray-200">
-                <th>ID</th>
-                <th>FirstName</th>
-                <th>LastName</th>
-                <th>National Identity</th>
-                <th>Telephone</th>
-                <th>Email</th>
-                <th>Department</th>
-                <th>Position</th>
-                <th>Laptop Manufacturer</th>
-                <th>Model</th>
-                <th> Serial Number</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {currentEmployees.map((employee) => (
-                <tr key={employee.id} className="border-b border-transparent">
-                  <td className="py-2">{employee.id}</td>
-                  <td className="py-2">{employee.firstName}</td>
-                  <td className="py-2">{employee.lastName}</td>
-                  <td className="py-2 text-sm">{employee.national_id}</td>
-                  <td className="py-2">{employee.telephone}</td>
-                  <td className="py-2 text-[13px]">{employee.email}</td>
-                  <td className="py-4 pl-10">{employee.department}</td>
-                  <td className="py-2">{employee.position}</td>
-                  <td className="py-2">{employee.laptop_manufacturer}</td>
-                  <td className="py-2">{employee.model}</td>
-                  <td className="px-4 py-2">{employee.serial_number}</td>
-                  <td className="py-2 flex justify-center items-center">
-                    <button className="bg-green-500 text-white px-4 py-1 rounded mr-2">
-                      Update
-                    </button>
-                    <button className="bg-red-500 text-white px-4 py-1 rounded">
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table> */}
-        </div>
-      </div>
-      {/* <div className="h-16 flex flex-row p-3 bg-white justify-between w-[100%]">
-        <button
-          className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md"
-          onClick={handlePreviousPage}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <div className="text-[15px] flex flex-row items-center justify-evenly w-24">
-          Page {currentPage} of{" "}
-          {Math.ceil(filteredEmployees.length / employeesPerPage)}
-        </div>
-        <button
-          className="border px-3 text-sm hover:bg-[#48505E] hover:text-white rounded-md"
-          onClick={handleNextPage}
-          disabled={
-            currentPage ===
-            Math.ceil(filteredEmployees.length / employeesPerPage)
-          }
-        >
-          Next
-        </button>
-      </div> */}
-    </div>
-  );
-};
-
-export default Table;
+  export default Table;

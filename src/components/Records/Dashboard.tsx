@@ -33,11 +33,11 @@ const Dashboard = () => {
   }, []); 
 
   return (
-    <div className="flex flex-row w-full h-full ">
+    <div className="flex flex-row w-full h-screen ">
       <div className="flex flex-col justify-between w-[10%] items-start px-3 bg-white p-3">
         <div className="flex flex-col px-2 items-start justify-between h-28 text-[#0469a3c2]">
-          <span>Employee</span>
-          <span>Management</span>
+          <span>Equipment</span>
+          <span>Distribution</span>
           <span>System</span>
         </div>
         <div className="items-start">
@@ -54,8 +54,8 @@ const Dashboard = () => {
           </button>
         </div>
       </div>
-      <div className="">
-        <div className="h-[10%] flex flex-row justify-between p-3 bg-white border-x-4 border-[#f0f1f3]">
+      <div className="flex-grow max-w-[90%]">
+        <div className="w-full h-[10%] flex flex-row justify-between p-3 bg-white border-x-4 border-[#f0f1f3]">
           <div className="flex flex-col justify-center w-2/3 text-stone-500 ">
             <input
               type="text"
@@ -68,11 +68,12 @@ const Dashboard = () => {
           <div className="flex flex-col justify-center w-1/3 items-end">
             <div className="flex flex-row w-2/3 items-center">
               <VscAccount />
-              <div className="px-3">{username}</div>
+              <div></div>
+              <div className="px-3"> {username}</div>
             </div>
           </div>
         </div>
-        <div className="h-[90%] w-6/6">
+        <div className="h-[90%] w-full">
           <Table searchQuery={searchQuery} />
         </div>
       </div>
