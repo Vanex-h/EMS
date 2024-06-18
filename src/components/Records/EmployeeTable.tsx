@@ -67,7 +67,7 @@ export function SimpleDialog(props: SimpleDialogProps<Employee[]>) {
 
   const updateEmployee = async (e: any) => {
     e.preventDefault();
-    setLoading(true);
+    
     setError("");  // Clear previous errors
 
     try {
@@ -91,7 +91,7 @@ export function SimpleDialog(props: SimpleDialogProps<Employee[]>) {
         toast.success("Employee Updated Successfully");
         setTimeout(() => {}, 2000);
         setViewDialog(false);
-        window.location.reload();
+        await fetchEmployees();
       } else {
         const errorData = await response.json();
         const errorMessage = errorData.message || "Error updating the employee";
@@ -288,9 +288,6 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
   useEffect(() => {
     setSearchQuery(inputValue);
   }, [inputValue]);
-  const [employees, setEmployees] = useState<Employee[]>([]);
-  const [newEmployee, setNewEmployee] = useState<Employee[]>([]);
-  const [error, setError] = useState("");
   const [viewDialog, setViewDialog] = useState(false);
   const [recordIdToUpdate, setRecordIdToUpdate] = useState<number>(-1);
   const [employeeNber, setEmployeeNber] = useState<number>(0);
@@ -543,7 +540,7 @@ const EmployeeTable: React.FC<EmployeeTableProps> = ({
       {viewDialog ? (
         <SimpleDialog
           setViewDialog={setViewDialog}
-          setData={setEmployees}
+          setData={setData}
           id={parseInt(recordIdToUpdate as unknown as string, 10)}
         />
       ) : null}

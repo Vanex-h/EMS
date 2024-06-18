@@ -23,7 +23,8 @@ function App() {
             }
           ></Route>
           <Route path="login" element={token ? <Navigate to={"/records"} />:<Login />}></Route>
-          <Route path="" element={token ? <Navigate to={"/records"} />:<Login />}></Route>
+          {/* <Route path="" element={token ? <Navigate to={"/login"} />:<Login />}></Route> */}
+          <Route path ='' element={<Login />}></Route>
           <Route path="signup" element={token ? <Navigate to={"/records"} />: <Signup />}></Route>
           <Route
             path="records"
